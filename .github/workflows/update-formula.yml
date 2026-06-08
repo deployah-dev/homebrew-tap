@@ -1,0 +1,63 @@
+name: Update Formula
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to release (no v prefix, e.g. 0.1.4)"
+        required: true
+
+concurrency:
+  group: formula-update
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    name: Render and push formula
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Download SHA256SUMS
+        env:
+          VERSION: ${{ github.event.inputs.version }}
+        run: |
+          curl --fail --silent --show-error --location \
+            "https://github.com/deployah-dev/deployah/releases/download/v${VERSION}/SHA256SUMS" \
+            -o SHA256SUMS
+
+      - name: Parse checksums
+        env:
+          VERSION: ${{ github.event.inputs.version }}
+        run: |
+          set -euo pipefail
+          export VERSION="${VERSION}"
+          export SHA_DARWIN_ARM64=$(grep "deployah-darwin-arm64.tar.gz" SHA256SUMS | awk '{print $1}')
+          export SHA_DARWIN_AMD64=$(grep "deployah-darwin-amd64.tar.gz" SHA256SUMS | awk '{print $1}')
+          export SHA_LINUX_ARM64=$(grep "deployah-linux-arm64.tar.gz"  SHA256SUMS | awk '{print $1}')
+          export SHA_LINUX_AMD64=$(grep "deployah-linux-amd64.tar.gz"  SHA256SUMS | awk '{print $1}')
+
+          for var in SHA_DARWIN_ARM64 SHA_DARWIN_AMD64 SHA_LINUX_ARM64 SHA_LINUX_AMD64; do
+            if [ -z "${!var}" ]; then
+              echo "error: could not parse ${var} from SHA256SUMS" >&2
+              exit 1
+            fi
+          done
+
+          envsubst '$VERSION $SHA_DARWIN_ARM64 $SHA_DARWIN_AMD64 $SHA_LINUX_ARM64 $SHA_LINUX_AMD64' \
+            < templates/deployah.rb.tmpl > Formula/deployah.rb
+
+          rm SHA256SUMS
+
+      - name: Commit and push
+        env:
+          VERSION: ${{ github.event.inputs.version }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Formula/deployah.rb
+          git commit -m "bump deployah to ${VERSION}"
+          git push

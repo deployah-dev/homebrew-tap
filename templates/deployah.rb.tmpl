@@ -1,0 +1,42 @@
+class Deployah < Formula
+  desc "Deploy apps via Helm without Kubernetes or Helm expertise"
+  homepage "https://deployah.dev"
+  license "Apache-2.0"
+  version "${VERSION}"
+
+  on_macos do
+    on_arm do
+      url "https://github.com/deployah-dev/deployah/releases/download/v${VERSION}/deployah-darwin-arm64.tar.gz"
+      sha256 "${SHA_DARWIN_ARM64}"
+    end
+    on_intel do
+      url "https://github.com/deployah-dev/deployah/releases/download/v${VERSION}/deployah-darwin-amd64.tar.gz"
+      sha256 "${SHA_DARWIN_AMD64}"
+    end
+  end
+
+  on_linux do
+    on_arm do
+      url "https://github.com/deployah-dev/deployah/releases/download/v${VERSION}/deployah-linux-arm64.tar.gz"
+      sha256 "${SHA_LINUX_ARM64}"
+    end
+    on_intel do
+      url "https://github.com/deployah-dev/deployah/releases/download/v${VERSION}/deployah-linux-amd64.tar.gz"
+      sha256 "${SHA_LINUX_AMD64}"
+    end
+  end
+
+  livecheck do
+    url :stable
+    regex(/v?(\d+(?:\.\d+)+)/i)
+  end
+
+  def install
+    bin.install "deployah"
+    generate_completions_from_executable(bin/"deployah", "completion")
+  end
+
+  test do
+    assert_match version.to_s, shell_output("#{bin}/deployah --version")
+  end
+end
