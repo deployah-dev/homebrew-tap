@@ -2,27 +2,27 @@ class Deployah < Formula
   desc "Deploy apps via Helm without Kubernetes or Helm expertise"
   homepage "https://deployah.dev"
   license "Apache-2.0"
-  version "0.8.0"
+  version "0.9.0"
 
   on_macos do
     on_arm do
-      url "https://github.com/deployah-dev/deployah/releases/download/v0.8.0/deployah-darwin-arm64.tar.gz"
-      sha256 "6d01ff7f3d5bbb83378974005c89a39a31a807751211e5a676d884fc73d93a4a"
+      url "https://github.com/deployah-dev/deployah/releases/download/v0.9.0/deployah-darwin-arm64.tar.gz"
+      sha256 "7cffe0ed31f64bef3a41934fe1fc49874f73e77d230a51a5de2ab699a2785c51"
     end
     on_intel do
-      url "https://github.com/deployah-dev/deployah/releases/download/v0.8.0/deployah-darwin-amd64.tar.gz"
-      sha256 "eb1742a5595e48202e30dd81a66be872f53a23d5244da505cfb05b840d4797fa"
+      url "https://github.com/deployah-dev/deployah/releases/download/v0.9.0/deployah-darwin-amd64.tar.gz"
+      sha256 "9332e1e4a40e735b9c637b9229a57ae5f9228ff59f5a959fd31a4e5db5aad306"
     end
   end
 
   on_linux do
     on_arm do
-      url "https://github.com/deployah-dev/deployah/releases/download/v0.8.0/deployah-linux-arm64.tar.gz"
-      sha256 "91be12eedcf53a57659fc1f69c1737d9c50088fa42e8075f25141cb272fd0402"
+      url "https://github.com/deployah-dev/deployah/releases/download/v0.9.0/deployah-linux-arm64.tar.gz"
+      sha256 "b406567488c474da2aed661cdca386a7e4d74a0d82121190500472840ca48c4a"
     end
     on_intel do
-      url "https://github.com/deployah-dev/deployah/releases/download/v0.8.0/deployah-linux-amd64.tar.gz"
-      sha256 "2ed90348322e9e3b2694644919c383f1ae1dc28a0a8eb705ed819001620ca71d"
+      url "https://github.com/deployah-dev/deployah/releases/download/v0.9.0/deployah-linux-amd64.tar.gz"
+      sha256 "c3e164c45d2d20b7b2d588568f17feea62039ef714502a24e88fbfbd94927a80"
     end
   end
 
